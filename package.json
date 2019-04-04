@@ -73,7 +73,7 @@
     "uuidv4": "4.0.0",
     "validate-value": "5.0.2",
     "wolkenkit-application": "thenativeweb/wolkenkit-application#2b88335aa4000f68c6ee17b4d519aeef26ad89be",
-    "wolkenkit-eventstore": "thenativeweb/wolkenkit-eventstore#b1f29a2ba6c614f26c8bf721397e3446968bd2d8"
+    "wolkenkit-eventstore": "thenativeweb/wolkenkit-eventstore#33b862ab1109fd55ac42637b6bc7a8e5d55c4f5a"
   },
   "devDependencies": {
     "assertthat": "2.0.3",
