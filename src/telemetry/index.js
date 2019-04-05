@@ -20,6 +20,9 @@ const getConfiguration = require('../wolkenkit/commands/shared/getConfiguration'
 
 const stat = promisify(fs.stat);
 
+// TODO: We need to change `allowedCommands` here, because the new structure is
+// something like `application start`
+
 const telemetry = {
   fileName: '.wolkenkit',
 
