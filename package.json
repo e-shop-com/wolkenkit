@@ -79,7 +79,7 @@
     "assertthat": "2.0.3",
     "dir-compare": "1.7.2",
     "measure-time": "3.1.1",
-    "p-queue": "4.0.0",
+    "p-queue": "5.0.0",
     "roboter": "4.0.3",
     "wolkenkit-client": "3.1.0"
   },
