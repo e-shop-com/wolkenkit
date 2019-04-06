@@ -2,18 +2,16 @@
 
 'use strict';
 
-require('babel-polyfill');
-
 const buntstift = require('buntstift'),
       commandLineArgs = require('command-line-args'),
       commandLineCommands = require('command-line-commands'),
       findSuggestions = require('findsuggestions'),
       updateNotifier = require('update-notifier');
 
-const commands = require('../cli/commands'),
-      globalOptionDefinitions = require('../cli/globalOptionDefinitions'),
-      packageJson = require('../../package.json'),
-      telemetry = require('../telemetry');
+const commands = require('../lib/cli/commands'),
+      globalOptionDefinitions = require('../lib/cli/globalOptionDefinitions'),
+      packageJson = require('../package.json'),
+      telemetry = require('../lib/telemetry');
 
 updateNotifier({ pkg: packageJson }).notify();
 
