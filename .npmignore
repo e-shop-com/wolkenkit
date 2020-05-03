@@ -1,2 +1,7 @@
-raw
-test
+/.dependabot
+/.github
+/assets
+/docker
+/lib
+/test
+/websites

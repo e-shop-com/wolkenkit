@@ -1,92 +1,102 @@
 # wolkenkit
 
-wolkenkit is an open-source CQRS and event-sourcing framework for JavaScript and Node.js that perfectly matches DDD.
+wolkenkit is an open-source CQRS and event-sourcing framework for JavaScript and Node.js.
 
-![wolkenkit](images/logo.png "wolkenkit")
+**BEWARE: This README.md refers to the wolkenkit 4.0 community technology preview (CTP) 1. If you are looking for the latest stable release of wolkenkit, see the [wolkenkit documentation](https://docs.wolkenkit.io/).**
 
-> wolkenkit is a CQRS and event-sourcing framework for JavaScript and Node.js. wolkenkit uses an event-driven model based on DDD to setup an API for your business in no time. This way, wolkenkit bridges the language gap between your domain and technology.
+![wolkenkit](assets/logo.png "wolkenkit")
 
-## Table of contents
+## Status
 
--   [Installation](#installation)
-
--   [Quick start](#quick-start)
-
--   [Sample applications](#sample-applications)
-
--   [Getting help](#getting-help)
-
-    -   [Reporting an issue](#reporting-an-issue)
-    -   [Asking a question](#asking-a-question)
-    -   [Getting support](#getting-support)
-
--   [Finding the code](#finding-the-code)
-
--   [Running the build](#running-the-build)
-
--   [FAQ](#faq)
-
-    -   [Why do I get an Error loading extension section V3_ca message when running the story tests?](#why-do-i-get-an-error-loading-extension-section-v3_ca-message-when-running-the-story-tests)
-
--   [License](#license)
-
-## Installation
-
-```shell
-$ npm install -g wolkenkit
-```
+| Category         | Status                                                                                                                                         |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Version          | [![npm](https://img.shields.io/npm/v/wolkenkit)](https://www.npmjs.com/package/wolkenkit)                                                      |
+| Dependencies     | ![David](https://img.shields.io/david/thenativeweb/wolkenkit)                                                                                  |
+| Dev dependencies | ![David](https://img.shields.io/david/dev/thenativeweb/wolkenkit)                                                                              |
+| Build            | ![GitHub Actions](https://github.com/thenativeweb/wolkenkit/workflows/Release/badge.svg?branch=master) |
+| License          | ![GitHub](https://img.shields.io/github/license/thenativeweb/wolkenkit)                                                                        |
 
 ## Quick start
 
-First, have a look at the [documentation](https://docs.wolkenkit.io), and its getting started [guides](https://docs.wolkenkit.io/latest/guides/creating-your-first-application/setting-the-objective/). You should also learn about [why to use wolkenkit](https://docs.wolkenkit.io/latest/getting-started/understanding-wolkenkit/why-wolkenkit/).
+First you have to initialize a new application. For this, execute the following command and select a template and a language. The application is then created in a new subdirectory:
 
-There is a variety of [blog posts](https://docs.wolkenkit.io/latest/media/online-resources/blog-posts/) and [articles](https://docs.wolkenkit.io/latest/media/online-resources/articles/) that help you get started. Also, you are welcome to [join us on Slack](http://slackin.wolkenkit.io), and have a look at the [previously asked questions at Stack Overflow](http://stackoverflow.com/questions/tagged/wolkenkit).
+```shell
+$ npx wolkenkit@4.0.0-ctp.1 init <name>
+```
 
-If you are curious on what's next, have a look at the [roadmap](roadmap.md).
+Next, you need to install the application dependencies. To do this, change to the application directory and run the following command:
 
-## Sample applications
+```shell
+$ npm install
+```
 
-There are a number of sample applications available:
+Finally, from within the application directory, run the application in local development mode by executing the following command:
 
--   [wolkenkit-boards](https://github.com/thenativeweb/wolkenkit-boards) is a team collaboration application.
--   [wolkenkit-geocaching](https://github.com/revrng/wolkenkit-geocaching) is a geocaching application.
--   [wolkenkit-nevercompletedgame](https://github.com/thenativeweb/wolkenkit-nevercompletedgame) is a mystery game.
--   [wolkenkit-template-chat](https://github.com/thenativeweb/wolkenkit-template-chat) is a simple messaging application.
--   [wolkenkit-todomvc](https://github.com/thenativeweb/wolkenkit-todomvc) is a todo list application.
+```shell
+$ npx wolkenkit dev
+```
 
-## Getting help
+*Please note that the local development mode processes all data in-memory only, so any data will be lost when the application is closed.*
 
-If you need any help with wolkenkit, consider the following options. Also, you are welcome to [join us on Slack](http://slackin.wolkenkit.io).
+### Sending commands and receiving domain events
 
-### Reporting an issue
+To send commands or receive domain events, the current version only offers an HTTP interface. By default, wolkenkit provides three endpoints in local development mode:
 
-If you have found an issue please first have a look at the [previously reported issues](https://github.com/thenativeweb/wolkenkit/issues) to verify whether the issue has already been reported.
+- `http://localhost:3000/command/v2` for sending commands
+- `http://localhost:3000/domain-events/v2` for receiving domain events
+- `http://localhost:3001/health/v2` for fetching health data
 
-If not, [report a new issue](https://github.com/thenativeweb/wolkenkit/issues/new/choose) and provide any steps required to reproduce the issue, as well as the expected and the actual result. Additionally provide the versions of wolkenkit and Docker, and the type and architecture of the operating system you are using.
+*Please note that a future version of wolkenkit is going to include support for other formats and protocols, including GraphQL.*
 
-Ideally you can also include a [short but complete code sample](http://www.yoda.arachsys.com/csharp/complete.html) to reproduce the issue. Anyway, depending on the issue, we know that this is not always possible.
+To send a command, send a `POST` request with the following JSON data structure in the body to the command endpoint of the runtime. Of course, the specific names of the context, the aggregate and the command itself, as well as the aggregate id and the command's data depend on the domain you have modeled:
 
-Although wolkenkit is developed using multiple repositories, please report any issues to the [thenativeweb/wolkenkit](https://github.com/thenativeweb/wolkenkit/issues) repository, as this is the primary contact point.
+```json
+{
+  "contextIdentifier": {
+    "name": "communication"
+  },
+  "aggregateIdentifier": {
+    "name": "message",
+    "id": "ff7cd4eb-8ce0-4511-995a-2f9e9ce245fa"
+  },
+  "name": "send",
+  "data": {
+    "text": "Hello, world!"
+  }
+}
+```
 
-### Asking a question
+To receive domain events, send a `GET` request to the domain events endpoint of the runtime. The response is a stream of newline-separated JSON objects, using `application/x-ndjson` as its content-type. From time to time, a `heartbeat` will be sent by the server as well, which you may want to filter.
 
-If you want to ask a question please first have a look at the [previously asked questions at Stack Overflow](http://stackoverflow.com/questions/tagged/wolkenkit) to verify whether your question has already been asked.
+For details on the commands and domain events, and their data, see the sample application you have initialized.
 
-If not, [ask a new question](http://stackoverflow.com/questions/ask) and tag it with `wolkenkit`.
+### Packaging the application into a Docker image
 
-### Getting support
+To package the application into a Docker image, change to the application directory and run the following command. Assign a custom tag to name the Docker image:
 
-If you need help by the original authors of wolkenkit, e.g. to address issues specific to your environment or project, you may be interested in a paid support plan. For that, feel free to [contact the native web](mailto:hello@thenativeweb.io).
+```shell
+$ docker build -t <tag> .
+```
 
-## Finding the code
+Then you can push the created Docker image into a registry of your choice, for example to use it in Kubernetes.
 
-Since wolkenkit is a distributed application, its code is spread across various repositories. For an overview of the architecture and a list of the repositories, see the [wolkenkit documentation](https://docs.wolkenkit.io/latest/getting-started/understanding-wolkenkit/architecture/).
+### Run the application with `docker-compose`
 
-Additionally, you may want to have a look at these repositories that contain the most important supporting modules:
+Once you have built the Docker image, you can use `docker-compose` to run the application. The application directory contains a subdirectory named `deployment/docker-compose`, which contains ready-made scripts for various scenarios.
 
--   [wolkenkit-eventstore](https://github.com/thenativeweb/wolkenkit-eventstore)
--   [commands-events](https://github.com/thenativeweb/commands-events)
--   [tailwind](https://github.com/thenativeweb/tailwind)
+Basically, you can choose between the single-process runtime and the microservice runtime. While the former runs the entire application in a single process, the latter splits the different parts of the application into different processes, each of which you can then run on a separate machine.
+
+Using `docker-compose` also allows you to connect your own databases and infrastructure components. For details see the respective scripts.
+
+### Getting help
+
+Please remember that this version is a community technology preview (CTP) of the upcoming wolkenkit 4.0. Therefore it is possible that not all provided features work as expected or that some features are missing completely.
+
+**BEWARE: Do not use the CTP for productive use, but only for getting a first impression of and evaluating the upcoming wolkenkit 4.0.**
+
+If you experience any difficulties, please [create an issue](https://github.com/thenativeweb/wolkenkit/issues/new/choose) and provide any steps required to reproduce the issue, as well as the expected and the actual result. Additionally provide the versions of wolkenkit and Docker, and the type and architecture of the operating system you are using.
+
+Ideally you can also include a [short but complete code sample](http://sscce.org/) to reproduce the issue. Anyway, depending on the issue, this may not always be possible.
 
 ## Running the build
 
@@ -95,28 +105,3 @@ To build this module use [roboter](https://www.npmjs.com/package/roboter).
 ```shell
 $ npx roboter
 ```
-
-Additionally to the unit tests, there are so-called _story tests_. To run them, use the following command:
-
-```shell
-$ npx roboter test-stories
-```
-
-## FAQ
-
-### Why do I get an _Error loading extension section V3_ca_ message when running the story tests?
-
-If you get the error _Error loading extension section V3_ca_ when running the story tests, you have to edit your local OpenSSL configuration. You can find the configuration at `/private/etc/ssl/openssl.cnf`. In this file you have to add the following lines:
-
-    [ v3_ca ]
-    basicConstraints = critical,CA:TRUE
-
-## License
-
-Copyright (c) 2014-2018 the native web.
-
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License along with this program. If not, see [GNU Licenses](http://www.gnu.org/licenses/).

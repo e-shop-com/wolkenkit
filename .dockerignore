@@ -1,0 +1,9 @@
+/.dependabot
+/.git
+/.github
+/assets
+/build
+/node_modules
+/test
+/websites/documentation/.next
+/websites/documentation/out

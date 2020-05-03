@@ -1,17 +1,11 @@
 # Node.js folders
-*coverage/
-*node_modules/
+/node_modules/
 
 # Build artefacts
-*build/
+/build/
+/websites/**/.next
+/websites/**/out
 
 # OS generated files and folders
 .DS_Store
 npm-debug.log
-
-# terraform
-.terraform/
-terraform.tfstate
-terraform.tfstate.backup
-.terraform.tfstate.lock.info
-.docker/

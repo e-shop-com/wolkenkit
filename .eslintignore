@@ -1,0 +1,13 @@
+# Build artefacts
+/build/
+
+# Test applications
+/test/shared/applications/javascript/withSyntaxError/
+/test/shared/applications/typescript/
+
+# Application templates
+/templates/
+
+# Next.js build output
+/websites/**/.next
+/websites/**/out
